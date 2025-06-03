@@ -7,8 +7,8 @@ interface Params {
 
 var documentRepository = new DocumentRepository();
 
-export async function GET(_: Request, { params }: Params) {
-  const userId = params.id;
+export async function GET(_: Request, context: Params) {
+  const userId = context.params.id;
     try {
       const documents = await documentRepository.getAllByUserId(userId);
   

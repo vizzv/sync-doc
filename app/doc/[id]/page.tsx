@@ -3,7 +3,7 @@ import EditorClient from '@/app/components/EditorClient'
 import Router from 'next/router';
   import React, { useEffect } from 'react'
 
- function page() {
+ function page(context: { params: { id: string } }) {
   useEffect(() => {
     const cookies = document.cookie.split('; ');
     const cookieMap: Record<string, string> = {};
@@ -18,14 +18,14 @@ import Router from 'next/router';
       Router.push('/login');
     } else {
       const userFromCookie = JSON.parse(decodeURIComponent(cookieMap.user));
-      console.log('User from cookie:', userFromCookie.user, typeof userFromCookie);
+      
     }
     //TODO: validate user and document permission .
   }, []);
 
 
     return (
-        <EditorClient/>
+        <EditorClient documentId={context.params.id}/>
     )
   }
 

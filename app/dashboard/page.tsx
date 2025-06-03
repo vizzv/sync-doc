@@ -53,6 +53,7 @@ export default function DashboardPage() {
     try {
       const response = await fetch('/api/document', {body:JSON.stringify({title:"New Document",userId:userId??"temp"}),method:'POST',headers:{"Content-Type":"application/json"}});
       const newDoc: Document = await response.json();
+      console.log('New document created:', newDoc);
       setDoc(prevDocs => prevDocs ? [...prevDocs, newDoc] : [newDoc]);
 
     }

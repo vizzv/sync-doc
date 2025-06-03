@@ -8,8 +8,8 @@ interface Params {
 
 var documentRepository = new DocumentRepository();
 
-export async function GET(_: Request, { params }: Params) {
-  const documentId = params.id;
+export async function GET(_: Request, context: Params) {
+  const documentId = context.params.id;
     try {
       const document = await documentRepository.getById(documentId);
      const documentContent = await documentRepository.getContentById(documentId);
