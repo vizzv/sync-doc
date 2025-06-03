@@ -266,7 +266,7 @@ export function SimpleEditor() {
       <div className="content-wrapper">
         <EditorContent
           editor={editor}
-          role="presentation"
+          role="document"
           className="simple-editor-content"
         />
       </div>

@@ -30,7 +30,6 @@ export default function HomePage() {
               });
           
               if (headerResponse.ok) {
-                console.log("in ok")
                 const { accessToken, user, redirectUrl } = await headerResponse.json();
           
                 localStorage.setItem('accessToken', accessToken);

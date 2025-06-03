@@ -1,13 +1,32 @@
-'use client';
+"use client"
+import EditorClient from '@/app/components/EditorClient'
+import Router from 'next/router';
+  import React, { useEffect } from 'react'
 
-import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
+ function page() {
+  useEffect(() => {
+    const cookies = document.cookie.split('; ');
+    const cookieMap: Record<string, string> = {};
 
-import React from 'react'
+    cookies.forEach(cookie => {
+      const [key, value] = cookie.split('=');
+      cookieMap[key] = value;
+    });
+    console.log('Cookies:', cookieMap);
 
-function page() {
-  return (
-    <SimpleEditor/>
-  )
-}
+    if (!cookieMap.user) {
+      Router.push('/login');
+    } else {
+      const userFromCookie = JSON.parse(decodeURIComponent(cookieMap.user));
+      console.log('User from cookie:', userFromCookie.user, typeof userFromCookie);
+    }
+    //TODO: validate user and document permission .
+  }, []);
 
-export default page
+
+    return (
+        <EditorClient/>
+    )
+  }
+
+  export default page

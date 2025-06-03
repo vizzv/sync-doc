@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("NEXT_PUBLIC_POSTGRESQL_URL")
+}
+
+model User {
+  id            String               @id @default(uuid())
+  name          String
+  avatar_url    String?
+  email         String               @unique
+  created_at    DateTime             @default(now())
+
+  // Relations
+  documentsOwned      Document[]         @relation("OwnerDocuments")
+  sharedLinksCreated  SharedLink[]       @relation("SharedLinkCreator")
+  documentPermissions DocumentPermission[] @relation("UserPermissions")
+  permissionsGranted  DocumentPermission[] @relation("GrantedByUser")
+}
+
+model Document {
+  id                String      @id @default(uuid())
+  current_version_id String?
+  title             String
+  created_at        DateTime    @default(now())
+  updated_at        DateTime    @updatedAt
+  owner_id          String
+
+  // Relations
+  owner             User        @relation("OwnerDocuments", fields: [owner_id], references: [id])
+  sharedLinks       SharedLink[]
+  permissions       DocumentPermission[]
+}
+
+model SharedLink {
+  id          String   @id @default(uuid())
+  url_token   String   @unique
+  created_at  DateTime @default(now())
+  expires_at  DateTime?
+  is_active   Boolean  @default(true)
+  document_id String
+  created_by  String
+
+  // Relations
+  document    Document @relation(fields: [document_id], references: [id])
+  creator     User     @relation("SharedLinkCreator", fields: [created_by], references: [id])
+}
+
+model Permission {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+
+  // Relations
+  grantedPermissions DocumentPermission[]
+}
+
+model DocumentPermission {
+  id             String     @id @default(uuid())
+  document_id    String
+  user_id        String
+  granted_at     DateTime   @default(now())
+  granted_by     String
+  permission_id  String
+
+  // Relations
+  document       Document   @relation(fields: [document_id], references: [id])
+  user           User       @relation("UserPermissions", fields: [user_id], references: [id])
+  grantedBy      User       @relation("GrantedByUser", fields: [granted_by], references: [id])
+  permission     Permission @relation(fields: [permission_id], references: [id])
+}
